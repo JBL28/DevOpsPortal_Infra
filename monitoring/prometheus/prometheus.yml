@@ -1,0 +1,48 @@
+# monitoring/prometheus
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+
+  - job_name: 'KeyCloak'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["keycloak:9000"]
+
+  - job_name: prometheus
+    static_configs:
+      - targets: ["prometheus:9090"]
+
+  - job_name: alertmanager
+    static_configs:
+      - targets: ["alertmanager:9093"]
+
+  - job_name: loki
+    static_configs:
+      - targets: ["loki:3100"]
+
+  - job_name: promtail
+    static_configs:
+      - targets: ["promtail:9080"]
+
+  - job_name: jenkins
+    metrics_path: /prometheus
+    static_configs:
+      - targets: ["jenkins:8080"]
+    
+  # - job_name: 'SYSTEM'
+  #   metrics_path: /metrics
+  #   static_configs:
+  #     - targets:
+  #         - 'system_exporter:9100'
+  
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - "alertmanager:9093"
+
+rule_files:
+  - "/etc/prometheus/alert.rules.yml"
