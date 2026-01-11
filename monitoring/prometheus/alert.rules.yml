@@ -1,0 +1,25 @@
+# alert.rules.yml
+
+groups:
+  - name: keycloak-hello
+    rules:
+      - alert: 알림 봇 작동 시작
+        expr: vector(1)
+        for: 10s
+        labels:
+          severity: test
+        annotations:
+          summary: "Mattermost connection"
+
+  - name: keycloak-critical
+    rules:
+      - alert: Keycloak 서비스 다운
+        expr: up{job="KeyCloak"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Keycloak DOWN"
+          description: "Prometheus scrape가 1분 이상 실패했습니다. instance={{ $labels.instance }}"
+
+
